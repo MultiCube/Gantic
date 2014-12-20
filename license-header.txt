@@ -21,15 +21,3 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.simonschlueter.gantic.event.listener;
-
-import com.simonschlueter.gantic.event.PreSerializeEvent;
-
-/**
- *
- * @author simon
- */
-public interface PreSerializeEventListener {
-    
-    public void onPreSerialize(PreSerializeEvent event);
-}
