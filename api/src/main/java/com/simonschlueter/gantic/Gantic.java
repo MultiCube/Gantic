@@ -64,12 +64,12 @@ public class Gantic extends GanticClient {
         getCollection(object).insert(dbObject);
     }
     
-    public void update(Object object) {
+    public void update(Object object, String... fields) {
         if (object instanceof PreSerializeEventListener) {
             ((PreSerializeEventListener) object).onPreSerialize(new PreSerializeEvent(false));
         }
         
-        DBObject dbObject = ObjectParser.parseObject(object, false);
+        DBObject dbObject = ObjectParser.parseObject(object, false, fields);
         
         if (object instanceof PreSaveEventListener) {
             ((PreSaveEventListener) object).onPreSave(new PreSaveEvent(dbObject, false));

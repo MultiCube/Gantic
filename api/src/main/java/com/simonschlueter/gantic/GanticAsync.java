@@ -133,12 +133,12 @@ public class GanticAsync extends Gantic {
         }, callback);
     }
     
-    public void updateAsync(final Object object, Result<WriteResult> callback) {
+    public void updateAsync(final Object object, Result<WriteResult> callback, String... fields) {
         if (object instanceof PreSerializeEventListener) {
             ((PreSerializeEventListener) object).onPreSerialize(new PreSerializeEvent(false));
         }
         
-        final DBObject dbObject = ObjectParser.parseObject(object, true);
+        final DBObject dbObject = ObjectParser.parseObject(object, true, fields);
         
         if (object instanceof PreSaveEventListener) {
             ((PreSaveEventListener) object).onPreSave(new PreSaveEvent(dbObject, false));
