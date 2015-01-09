@@ -176,6 +176,8 @@ public class GanticAsync extends Gantic {
                 }
             }
         }
+        
+        client.close();
     }
     
     public boolean isAlive() {
