@@ -13,3 +13,5 @@ hs_err_pid*
 
 # Directories
 /target/
+/api/target/
+/example/target/
