@@ -44,6 +44,8 @@ public class GanticAsync extends Gantic {
 
     private LinkedBlockingQueue<GanticQuery> queue = new LinkedBlockingQueue<>();
     private CallbackHandler callbackHandler = new UnsafeCallbackHandler();
+    private ArrayList<Thread> slaves = new ArrayList<>();
+    private volatile boolean alive = true;
     
     public GanticAsync(MongoClient client, String db, int poolSize) {
         super(client, db);
@@ -63,6 +65,8 @@ public class GanticAsync extends Gantic {
         for (int i = 1; i <= size; i++) {
             Thread thread = new Thread(new GanticSlave(i));
             thread.start();
+            
+            slaves.add(thread);
         }
     }
     
@@ -156,6 +160,10 @@ public class GanticAsync extends Gantic {
         queue.add(query.setCallback(callback));
     }
     
+    public void shutdown() {
+        alive = false;
+    }
+    
     private class GanticSlave implements Runnable {
 
         private int id;
@@ -166,7 +174,7 @@ public class GanticAsync extends Gantic {
         
         @Override
         public void run() {
-            while (true) {
+            while (alive) {
                 GanticQuery query = null;
                 try {
                     query = queue.take();
