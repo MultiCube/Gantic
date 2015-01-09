@@ -161,7 +161,33 @@ public class GanticAsync extends Gantic {
     }
     
     public void shutdown() {
+        shutdown(false);
+    }
+    
+    public void shutdown(boolean safe) {
         alive = false;
+        
+        if (safe) {
+            for (GanticQuery query : queue) {
+                try {
+                    handleQuery(query);
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
+            }
+        }
+    }
+    
+    public boolean isAlive() {
+        return alive;
+    }
+    
+    private void handleQuery(GanticQuery query) {
+        Object value = query.handle();
+        
+        if (query.getCallback() != null) {
+            callbackHandler.handleCallback(query.getCallback(), value);
+        }
     }
     
     private class GanticSlave implements Runnable {
@@ -183,10 +209,7 @@ public class GanticAsync extends Gantic {
                 }
                 if (query != null) {
                     try {
-                        Object value = query.handle();
-                        if (query.getCallback() != null) {
-                            callbackHandler.handleCallback(query.getCallback(), value);
-                        }
+                        handleQuery(query);
                     } catch (Exception ex) {
                         ex.printStackTrace();
                     }
