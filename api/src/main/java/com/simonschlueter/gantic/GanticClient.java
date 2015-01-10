@@ -58,6 +58,12 @@ public abstract class GanticClient {
         }
     }
     
+    /**
+     * This method returns the DBCollection for a class.
+     * 
+     * @param objectClass the class to get the DBCollection for
+     * @return the DBCollection for this class
+     */
     public DBCollection getCollection(Class<?> objectClass) {
         MongoCollection objectAnnotation = objectClass.getAnnotation(MongoCollection.class);
         
@@ -74,7 +80,20 @@ public abstract class GanticClient {
         return client.getDB(objectDb).getCollection(collectionName);
     }
     
+    /**
+     * This method returns the DBCollection for an object.
+     * 
+     * @param object the object to get the DBCollection for
+     * @return the DBCollection for this object
+     */
     public DBCollection getCollection(Object object) {
         return getCollection(object.getClass());
+    }
+    
+    /**
+     * Shuts the client. This ends the database connection.
+     */
+    public void shutdown() {
+        client.close();
     }
 }

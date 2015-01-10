@@ -48,6 +48,11 @@ public class Gantic extends GanticClient {
         super(host, port, db);
     }
     
+    /**
+     * Inserts a new object into the database.
+     * 
+     * @param object The object to insert
+     */
     public void insert(Object object) {
         ObjectParser.setId(object);
         
@@ -64,6 +69,12 @@ public class Gantic extends GanticClient {
         getCollection(object).insert(dbObject);
     }
     
+    /**
+     * Updates an object in the database.
+     * 
+     * @param object The object to update
+     * @param fields Certain fields to be only updated
+     */
     public void update(Object object, String... fields) {
         if (object instanceof PreSerializeEventListener) {
             ((PreSerializeEventListener) object).onPreSerialize(new PreSerializeEvent(false));
@@ -78,10 +89,25 @@ public class Gantic extends GanticClient {
         getCollection(object).update(new BasicDBObject("_id", dbObject.get("_id")), new BasicDBObject("$set", dbObject));
     }
     
+    /**
+     * Finds all objects of a certain type.
+     * 
+     * @param <T> the class of the object to find
+     * @param type the class of the object to find
+     * @return a list of the found objects
+     */
     public <T> List<T> find(Class<T> type) {
         return find(type, new BasicDBObject());
     }
     
+    /**
+     * Finds all objects of a certain type and matching a query.
+     * 
+     * @param <T> the class of the object to find
+     * @param type the class of the object to find
+     * @param query the query to find the objects
+     * @return a list of the found objects
+     */
     public <T> List<T> find(Class<T> type, DBObject query) {
         List<T> list = new ArrayList<>();
         
@@ -94,6 +120,14 @@ public class Gantic extends GanticClient {
         return list;
     }
     
+    /**
+     * Finds the first object matching a certain query.
+     * 
+     * @param <T> the class of the object to find
+     * @param type the class of the object to find
+     * @param query the query to find this object
+     * @return the object
+     */
     public <T> T findOne(Class<T> type, DBObject query) {
         List<T> list = find(type, query);
         

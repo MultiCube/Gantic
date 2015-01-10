@@ -70,14 +70,35 @@ public class GanticAsync extends Gantic {
         }
     }
     
+    /**
+     * With this method a custom callback handler can
+     * be set.
+     * 
+     * @param callbackHandler the callback handler to use
+     */
     public void setCallbackHandler(CallbackHandler callbackHandler) {
         this.callbackHandler = callbackHandler;
     }
     
+    /**
+     * Finds all objects of a certain type asynchronously.
+     * 
+     * @param <T> the class of the object to find
+     * @param type the class of the object to find
+     * @param callback a callback that will be called when finished
+     */
     public <T> void findAsync(Class<T> type, Result<List<T>> callback) {
         findAsync(type, new BasicDBObject(), callback);
     }
     
+    /**
+     * Finds all objects of a certain type and matching a query asynchronously.
+     * 
+     * @param <T> the class of the object to find
+     * @param type the class of the object to find
+     * @param query the query to find the objects
+     * @param callback a callback that will be called when finished
+     */
     public <T> void findAsync(final Class<T> type, final DBObject query, Result<List<T>> callback) {
         execute(new GanticQuery<List<T>>() {
 
@@ -97,6 +118,14 @@ public class GanticAsync extends Gantic {
         }, callback);
     }
     
+    /**
+     * Finds the first object matching a certain query asynchronously.
+     * 
+     * @param <T> the class of the object to find
+     * @param type the class of the object to find
+     * @param query the query to find the objects
+     * @param callback a callback that will be called when finished
+     */
     public <T> void findOneAsync(final Class<T> type, final DBObject query, Result<T> callback) {
         execute(new GanticQuery<T>() {
 
@@ -110,6 +139,12 @@ public class GanticAsync extends Gantic {
         }, callback);
     }
     
+    /**
+     * Inserts a new object into the database asynchronously
+     * 
+     * @param object the object to insert
+     * @param callback an callback to be called when finished
+     */
     public void insertAsync(final Object object, Result<WriteResult> callback) {
         if (object instanceof PreSerializeEventListener) {
             ((PreSerializeEventListener) object).onPreSerialize(new PreSerializeEvent(true));
@@ -133,6 +168,13 @@ public class GanticAsync extends Gantic {
         }, callback);
     }
     
+    /**
+     * Updates an object in the database asynchronously.
+     * 
+     * @param object the object to update
+     * @param callback an callback to be called when finished
+     * @param fields certain fields to be only updated
+     */
     public void updateAsync(final Object object, Result<WriteResult> callback, String... fields) {
         if (object instanceof PreSerializeEventListener) {
             ((PreSerializeEventListener) object).onPreSerialize(new PreSerializeEvent(false));
@@ -160,10 +202,20 @@ public class GanticAsync extends Gantic {
         queue.add(query.setCallback(callback));
     }
     
+    /**
+     * Shuts down all slaves and the database connection. This
+     * method does not execute all queries left in the queue.
+     */
+    @Override
     public void shutdown() {
         shutdown(false);
     }
     
+    /**
+     * Shuts down all slaves and the database connection.
+     * 
+     * @param safe wether to execute all queries left synchronously or not
+     */
     public void shutdown(boolean safe) {
         alive = false;
         
@@ -177,9 +229,15 @@ public class GanticAsync extends Gantic {
             }
         }
         
-        client.close();
+        super.shutdown();
     }
     
+    /**
+     * Returns wether this client is still alive or has
+     * been shut down.
+     * 
+     * @return wether the client is alive or not
+     */
     public boolean isAlive() {
         return alive;
     }
