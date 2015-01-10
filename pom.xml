@@ -8,7 +8,7 @@
     <packaging>pom</packaging>
     
     <name>gantic-parent</name>
-    <description>Parent project for all ganic modules.</description>
+    <description>Parent project for all gantic modules.</description>
     <inceptionYear>2014</inceptionYear>
     
     <modules>
