@@ -209,7 +209,11 @@ public class ObjectParser {
                             } else if (field.getType().isEnum()) {
                                 value = field.getType().getMethod("valueOf", String.class).invoke(null, value);
                             } else if (List.class.isAssignableFrom(field.getType())) {
-                                value = field.getType().getConstructor(List.class).newInstance(value);
+                                List list = (List) field.getType().getConstructor(List.class).newInstance();
+                                for (Object o : (List) value) {
+                                    list.add(o);
+                                }
+                                value = list;
                             } else if (field.getType().getAnnotation(MongoObject.class) != null) {
                                 value = parseDbObject(field.getType(), (DBObject) value);
                             } else if (field.getType().equals(HashMap.class)) {
